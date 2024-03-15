@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(10); // Frecuencia de 10 Hz
 
     while (ros::ok()) {
-        mi_pkg::Torque torques = calculateTorques();
+        Quadcopter_UAV::Torque torques = calculateTorques();
         torque_pub.publish(torques);
         
         ros::spinOnce();
