@@ -39,9 +39,10 @@ void LinearControlCallback(const geometry_msgs::Vector3::ConstPtr& th){
 
 void AttitudeControlCallback(const geometry_msgs::Vector3::ConstPtr& moments){
 
-    tx = moments->x;
-    ty = moments->y;
-    tz = moments->z;
+    torques(0) = moments->x;
+    torques(1) = moments->y;
+    torques(2) = moments->z;
+
 }
 
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv){
     ros::Publisher Dynamics_attitude_Pub = nh.advertise<geometry_msgs::Vector3>("dynamics/attitude",10);
     ros::Publisher Dynamics_attitude_dot_Pub = nh.advertise<geometry_msgs::Vector3>("dynamics/attitude_dot",10);
 
-    ros::Subscriber LinearControl_Sub = nh.subscribe("/posdata/angdes", 10, &LinearControlCallback);
+    ros::Subscriber LinearControl_Sub = nh.subscribe("/posdata/thrust", 10, &LinearControlCallback);
     ros::Subscriber AttitudeControl_Sub = nh.subscribe("/torques", 10, &AttitudeControlCallback);
 
     ros::Rate loop_rate(100);
@@ -75,8 +76,7 @@ int main(int argc, char **argv){
 
     while (ros::ok())
     {
-        
-    
+         
     angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * angular_vel_body));
     
 
@@ -84,7 +84,6 @@ int main(int argc, char **argv){
     {
         angular_vel_body(i) = angular_vel_body(i) + step * angular_accel_body(i);
     }
-
 
     attitude_dot = R2(attitude(0), attitude(1), attitude(2)) * angular_vel_body;
 
