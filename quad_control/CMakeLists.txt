@@ -212,6 +212,9 @@ include_directories(
 add_executable(Dynamics_node src/UAV_Dynamics.cpp)
 target_link_libraries(Dynamics_node ${catkin_LIBRARIES})
 
+add_executable(Dynamcis_node src/Dynamics2.cpp)
+target_link_libraries(Dynamcis_node ${catkin_LIBRARIES})
+
 add_executable(attitude_control_node src/attitude_control.cpp)
 target_link_libraries(attitude_control_node ${catkin_LIBRARIES})
 
