@@ -13,12 +13,12 @@ const float Jxx = 0.0411;
 const float Jyy = 0.0478;
 const float Jzz = 0.0599;
 
-const float Kp_phi = 1.0;
-const float Kd_phi = 3.0;
-const float Kp_theta = 1.0;
-const float Kd_theta = 3.0;
-const float Kp_psi = 1.0;
-const float Kd_psi = 3.0;
+const float Kp_phi = 0.5;
+const float Kd_phi = 1;
+const float Kp_theta = 0.5;
+const float Kd_theta = 1;
+const float Kp_psi = 0.5;
+const float Kd_psi = 1;
 
 
 // Callbacks para los datos recibidos
