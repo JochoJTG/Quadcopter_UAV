@@ -39,9 +39,10 @@ void LinearControlCallback(const geometry_msgs::Vector3::ConstPtr& th){
 
 void AttitudeControlCallback(const geometry_msgs::Vector3::ConstPtr& moments){
 
-    tx = moments->x;
-    ty = moments->y;
-    tz = moments->z;
+    torques(0) = moments->x;
+    torques(1) = moments->y;
+    torques(2) = moments->z;
+
 }
 
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv){
     ros::Publisher Dynamics_attitude_Pub = nh.advertise<geometry_msgs::Vector3>("dynamics/attitude",10);
     ros::Publisher Dynamics_attitude_dot_Pub = nh.advertise<geometry_msgs::Vector3>("dynamics/attitude_dot",10);
 
-    ros::Subscriber LinearControl_Sub = nh.subscribe("/posdata/angdes", 10, &LinearControlCallback);
+    ros::Subscriber LinearControl_Sub = nh.subscribe("/posdata/thrust", 10, &LinearControlCallback);
     ros::Subscriber AttitudeControl_Sub = nh.subscribe("/torques", 10, &AttitudeControlCallback);
 
     ros::Rate loop_rate(100);
@@ -68,10 +69,14 @@ int main(int argc, char **argv){
 
     e3 << 0, 0, 1;  
 
+    geometry_msgs::Vector3 pos;
+    geometry_msgs::Vector3 vel;
+    geometry_msgs::Vector3 attitude_angles;
+    geometry_msgs::Vector3 attitude_dot_angles;
+
     while (ros::ok())
     {
-        
-    
+         
     angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * angular_vel_body));
     
 
@@ -79,7 +84,6 @@ int main(int argc, char **argv){
     {
         angular_vel_body(i) = angular_vel_body(i) + step * angular_accel_body(i);
     }
-
 
     attitude_dot = R2(attitude(0), attitude(1), attitude(2)) * angular_vel_body;
 
@@ -107,6 +111,29 @@ int main(int argc, char **argv){
     }
 
 
+        pos.x = linear_pos(0);
+        pos.y = linear_pos(1);
+        pos.z = linear_pos(2);
+
+        vel.x = linear_vel_inertial(0);
+        vel.x = linear_vel_inertial(1);
+        vel.x = linear_vel_inertial(2);
+
+        attitude_angles.x = attitude(0);
+        attitude_angles.y = attitude(1);
+        attitude_angles.z = attitude(2);
+
+        attitude_dot_angles.x = attitude_dot(0);
+        attitude_dot_angles.y = attitude_dot(1);
+        attitude_dot_angles.z = attitude_dot(2);
+
+
+        Dynamics_pos_Pub.publish(pos);
+        Dynamics_vel_Pub.publish(vel);
+        Dynamics_attitude_Pub.publish(attitude_angles);
+        Dynamics_attitude_dot_Pub.publish(attitude_dot_angles);
+
+        
         ros::spinOnce();
         loop_rate.sleep();
 
