@@ -208,3 +208,21 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(Dynamics_node src/UAV_Dynamics.cpp)
+target_link_libraries(Dynamics_node ${catkin_LIBRARIES})
+
+add_executable(attitude_node src/attitude_control.cpp)
+target_link_libraries(attitude_node ${catkin_LIBRARIES})
+
+add_executable(refdata_node src/refdata.cpp)
+target_link_libraries(refdata_node ${catkin_LIBRARIES})
+
+catkin_install_python(
+  PROGRAMS src/UAV_PosControl.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+add_executable(quad_gazebo_broadcaster_node src/quad_gazebo_broadcaster.cpp)
+target_link_libraries(quad_gazebo_broadcaster_node ${catkin_LIBRARIES})
+
