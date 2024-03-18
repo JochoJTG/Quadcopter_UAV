@@ -2,7 +2,7 @@
 
 	
 	<node pkg="quad_control" type="refdata_node" name="refdata_node"  />
-    <node pkg="quad_control" type="UAV_PosControl.py" name="PositionControl_node"  />
+    <node pkg="quad_control" type="UAV_PosControl.py" name="PositionControl_node" output = "screen" />
     <node pkg="quad_control" type="attitude_control_node" name="attitude_control_node"  />
     <node pkg="quad_control" type="Dynamics_node" name="Dynamics_node"  />
 
