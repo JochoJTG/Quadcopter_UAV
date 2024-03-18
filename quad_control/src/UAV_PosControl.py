@@ -56,6 +56,7 @@ def main():
     rospy.Subscriber("refdata/posdes",Vector3, callbackposdes)
     rospy.Subscriber("refdata/veldes",Vector3, callbackveldes)
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
+    Th = rospy.Publisher('posdata/thrust',Vector3, queue_size = 10)
 
  #jorge se la come
 
@@ -68,6 +69,7 @@ def main():
     kdz=1
     m=100
     angs=Vector3()
+    thrust_vec = Vector3()
     angs.z=0
 
 
@@ -80,19 +82,24 @@ def main():
         exvel=xvel-xveldes
         eyvel=yvel-yveldes
         ezvel=zvel-zveldes
-
+    
         uvx=-kpx*ex-kdx*exvel
         uvy=-kpy*ey-kdy*eyvel
         uvz=-kpz*ez-kdz*ezvel
 
-        thrust=m/(math.cos(pitch)*math.cos(roll))*(-9.81+uvz)
+        thrust=(m/(math.cos(pitch)*math.cos(roll))*(-9.81+uvz))
         phides=math.asin((m/thrust)*(math.sin(yaw)*uvx-math.cos(yaw)*uvy))
         thetades=math.asin((m/thrust)*uvx-math.sin(yaw)*math.sin(phides)/(math.cos(yaw)*math.cos(phides)))
         
         angs.x= thetades
         angs.y= phides
+        thrust_vec.x = thrust
+
+        
 
         angdes.publish(angs)
+        Th.publish(thrust_vec)
+
 
 
         #xt=xdes-x
@@ -111,7 +118,7 @@ def main():
 
         rate.sleep()
 
-
+#
 
 if __name__ == '__main__':
     try:
