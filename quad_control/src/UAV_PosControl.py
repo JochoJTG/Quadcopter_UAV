@@ -1,7 +1,7 @@
 import rospy
 import numpy
 import math
-from geometry_msgs import Vector3
+from geometry_msgs.msg import Vector3
 
 def callbackpos(data):
     global x
@@ -115,6 +115,21 @@ def main():
 
 if __name__ == '__main__':
     try:
+        x=0
+        y=0
+        z=0
+        pitch=0
+        roll=0
+        yaw=0
+        xvel=0
+        yvel=0
+        zvel=0
+        xdes=0
+        ydes=0
+        zdes=0
+        xveldes=0
+        yveldes=0
+        zveldes=0
         main()
     except rospy.ROSInterruptException:
         pass
