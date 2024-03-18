@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
+  gazebo_msgs
+  tf2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -118,6 +121,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${EIGEN_3_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
