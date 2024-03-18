@@ -43,9 +43,6 @@ def callbackveldes(data):
     yveldes=data.y
     zveldes=data.z
  
-def callbackangdes(data):
-    global psi_des
-    psi_des = data.z
 
 def main():
 
@@ -58,7 +55,6 @@ def main():
     rospy.Subscriber("dynamics/lin_vel",Vector3, callbackvel)
     rospy.Subscriber("refdata/pos",Vector3, callbackposdes)
     rospy.Subscriber("refdata/vel",Vector3, callbackveldes)
-    rospy.Subscriber("refdata/ang", Vector3, callbackangdes)
 
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
     Th = rospy.Publisher('posdata/thrust',Vector3, queue_size = 10)
@@ -72,7 +68,6 @@ def main():
     kdz= 1
     m=2
     angs=Vector3()
-    Thr = Vector3()
 
     while not rospy.is_shutdown():
 
@@ -94,12 +89,10 @@ def main():
         
         angs.x= thetades
         angs.y= phides
-
-        Thr.x=thrust
+        angs.z=thrust
 
         
         angdes.publish(angs)
-        Th.publish(Thr)
   
 
 
@@ -135,7 +128,7 @@ if __name__ == '__main__':
         zvel=0
         xdes=0
         ydes=0
-        zdes=100
+        zdes=0
         xveldes=0
         yveldes=0
         zveldes=0
