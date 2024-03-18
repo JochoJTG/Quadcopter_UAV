@@ -77,15 +77,16 @@ int main(int argc, char **argv){
     while (ros::ok())
     {
          
-    angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * angular_vel_body));
+    //angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * angular_vel_body));
+    angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * attitude_dot));
     
 
     for (int i = 0; i < 3; i++)
     {
-        angular_vel_body(i) = angular_vel_body(i) + step * angular_accel_body(i);
+        attitude_dot(i) = attitude_dot(i) + step * angular_accel_body(i);
     }
 
-    attitude_dot = R2(attitude(0), attitude(1), attitude(2)) * angular_vel_body;
+    //attitude_dot = R2(attitude(0), attitude(1), attitude(2)) * angular_vel_body;
 
     for (int i = 0; i < 3; i++)
     {

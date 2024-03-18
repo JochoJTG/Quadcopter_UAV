@@ -37,8 +37,17 @@ void attitudeDotCallback(const geometry_msgs::Vector3::ConstPtr& msg){
 void angDesCallback(const geometry_msgs::Vector3::ConstPtr& msg){
     phi_d = msg->x;
     theta_d = msg->y;
+    
+}
+void yawDescallback(const geometry_msgs::Vector3::ConstPtr& msg){
     psi_d = msg->z;
 }
+
+void angDotcallback(const geometry_msgs::Vector3::ConstPtr& msg){
+    phi_punto_d = msg->x;
+    theta_punto_d = msg->y;
+    psi_punto_d = msg->z;
+}   
 
 
 
@@ -50,6 +59,8 @@ int main(int argc, char **argv) {
     ros::Subscriber subAttitude = nh.subscribe("dynamics/attitude", 10, &attitudeCallback);
     ros::Subscriber subAttitudeDot = nh.subscribe("dynamics/attitude_dot", 10, &attitudeDotCallback);
     ros::Subscriber subAngDes = nh.subscribe("posdata/angdes", 10, &angDesCallback);
+    ros::Subscriber yawAngDes = nh.subscribe("refdata/ang",10, &yawDescallback);
+    ros::Subscriber dotAngDes = nh.subscribe("refdata/omega",10, &angDotcallback);
 
     // Publicador para los torques usando Vector3
     ros::Publisher torque_pub = nh.advertise<geometry_msgs::Vector3>("/torques", 10);

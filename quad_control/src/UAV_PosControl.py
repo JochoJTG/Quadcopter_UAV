@@ -15,8 +15,8 @@ def callbackang(data):
     global pitch
     global roll
     global yaw
-    pitch=data.x
-    roll=data.y
+    roll=data.x
+    pitch=data.y
     yaw=data.z
 
 def callbackvel(data):
@@ -43,6 +43,9 @@ def callbackveldes(data):
     yveldes=data.y
     zveldes=data.z
  
+def callbackangdes(data):
+    global psi_des
+    psi_des = data.z
 
 def main():
 
@@ -53,23 +56,23 @@ def main():
     rospy.Subscriber("dynamics/pos",Vector3, callbackpos)
     rospy.Subscriber("dynamics/attitude",Vector3, callbackang)
     rospy.Subscriber("dynamics/lin_vel",Vector3, callbackvel)
-    rospy.Subscriber("refdata/posdes",Vector3, callbackposdes)
-    rospy.Subscriber("refdata/veldes",Vector3, callbackveldes)
+    rospy.Subscriber("refdata/pos",Vector3, callbackposdes)
+    rospy.Subscriber("refdata/vel",Vector3, callbackveldes)
+    rospy.Subscriber("refdata/ang", Vector3, callbackangdes)
+
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
     Th = rospy.Publisher('posdata/thrust',Vector3, queue_size = 10)
 
     rate = rospy.Rate(100)  
-    kpx=1
-    kdx=1
-    kpy=1
-    kdy=1
+    kpx= 0
+    kdx= 0.6
+    kpy= 0
+    kdy= 0.6
     kpz=1
-    kdz=1
+    kdz= 1
     m=2
     angs=Vector3()
-
-
-
+    Thr = Vector3()
 
     while not rospy.is_shutdown():
 
@@ -79,23 +82,24 @@ def main():
         exvel=xvel-xveldes
         eyvel=yvel-yveldes
         ezvel=zvel-zveldes
-    
+
         uvx=-kpx*ex-kdx*exvel
         uvy=-kpy*ey-kdy*eyvel
         uvz=-kpz*ez-kdz*ezvel
 
-        thrust=(m/(math.cos(pitch)*math.cos(roll))*(-9.81+uvz))
+        thrust=(m/(math.cos(pitch)*math.cos(roll)))*(-9.81+uvz)
         phides=math.asin((m/thrust)*(math.sin(yaw)*uvx-math.cos(yaw)*uvy))
-        thetades=math.asin((m/thrust)*uvx-math.sin(yaw)*math.sin(phides)/(math.cos(yaw)*math.cos(phides)))
+        print(xvel,xveldes)
+        thetades=math.asin(((m/thrust)*uvx-math.sin(yaw)*math.sin(phides))/(math.cos(yaw)*math.cos(phides)))
         
         angs.x= thetades
         angs.y= phides
-        angs.z=thrust
 
+        Thr.x=thrust
 
         
-
         angdes.publish(angs)
+        Th.publish(Thr)
   
 
 
@@ -135,6 +139,7 @@ if __name__ == '__main__':
         xveldes=0
         yveldes=0
         zveldes=0
+        psi_des = 0
         main()
     except rospy.ROSInterruptException:
         pass
