@@ -57,8 +57,6 @@ def main():
     rospy.Subscriber("refdata/veldes",Vector3, callbackveldes)
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
 
- #jorge se la come
-
     rate = rospy.Rate(100)  
     kpx=1
     kdx=1
@@ -68,8 +66,6 @@ def main():
     kdz=1
     m=100
     angs=Vector3()
-    angs.z=0
-
 
 
     while not rospy.is_shutdown():
@@ -91,6 +87,7 @@ def main():
         
         angs.x= thetades
         angs.y= phides
+        angs.z=thrust
 
         angdes.publish(angs)
 
@@ -126,7 +123,7 @@ if __name__ == '__main__':
         zvel=0
         xdes=0
         ydes=0
-        zdes=0
+        zdes=100
         xveldes=0
         yveldes=0
         zveldes=0
