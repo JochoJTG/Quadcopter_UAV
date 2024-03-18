@@ -88,7 +88,6 @@ int main(int argc, char **argv){
         attitude(i) = attitude(i) + step * attitude_dot(i);
     }
 
-
     //Linear dynamics
     
     force = thrust * e3 + R(attitude(0), attitude(1), attitude(2)).transpose() * uav_weight * g * e3;
