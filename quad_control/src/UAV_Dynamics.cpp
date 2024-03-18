@@ -53,7 +53,7 @@ void AngularDynamcis(){
     }
 
 
-    attitude_dot = R2(phi, theta, psi) * angular_vel_body
+    attitude_dot = R2(attitude(0), attitude(1), attitude(2)) * angular_vel_body
 
     for (uint8_t i = 0; i < 3; i++)
     {
@@ -64,7 +64,7 @@ void AngularDynamcis(){
 
 void LinearDynamics(){
 
-    force = thrust * e3 + R.transpose() * uav_weight * g * e3;
+    force = thrust * e3 + rotationalmatrix.transpose() * uav_weight * g * e3;
     
     linear_accel_body = force/uav_weight - angular_vel_body.cross(linear_vel_body);
     
@@ -74,7 +74,7 @@ void LinearDynamics(){
         linear_vel_body(i) = linear_vel_body(i) + step * linear_accel_body(i);
     }
    
-    linear_vel_inertial = R(phi,theta,psi) * linear_vel_body;
+    linear_vel_inertial = R(attitude(0), attitude(1), attitude(2)) * linear_vel_body;
     
     for (uint8_t i = 0; i < 3; i++)
     {
