@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     // Publicador para los torques usando Vector3
     ros::Publisher torque_pub = nh.advertise<geometry_msgs::Vector3>("/torques", 10);
 
-    ros::Rate loop_rate(10); // Frecuencia de 10 Hz
+    ros::Rate loop_rate(100); // Frecuencia de 10 Hz
 
     while (ros::ok()) {
 
