@@ -67,8 +67,7 @@ def main():
     kdz=1
     m=2
     angs=Vector3()
-    thrust_vec = Vector3()
-    angs.z=0
+
 
 
 
@@ -92,12 +91,12 @@ def main():
         angs.x= thetades
         angs.y= phides
         angs.z=thrust
-        thrust_vec.x = thrust
+
 
         
 
         angdes.publish(angs)
-        Th.publish(thrust_vec)
+  
 
 
 
