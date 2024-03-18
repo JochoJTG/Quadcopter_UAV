@@ -68,6 +68,11 @@ int main(int argc, char **argv){
 
     e3 << 0, 0, 1;  
 
+    geometry_msgs::Vector3 pos;
+    geometry_msgs::Vector3 vel;
+    geometry_msgs::Vector3 attitude_angles;
+    geometry_msgs::Vector3 attitude_dot_angles;
+
     while (ros::ok())
     {
         
@@ -107,6 +112,29 @@ int main(int argc, char **argv){
     }
 
 
+        pos.x = linear_pos(0);
+        pos.y = linear_pos(1);
+        pos.z = linear_pos(2);
+
+        vel.x = linear_vel_inertial(0);
+        vel.x = linear_vel_inertial(1);
+        vel.x = linear_vel_inertial(2);
+
+        attitude_angles.x = attitude(0);
+        attitude_angles.y = attitude(1);
+        attitude_angles.z = attitude(2);
+
+        attitude_dot_angles.x = attitude_dot(0);
+        attitude_dot_angles.y = attitude_dot(1);
+        attitude_dot_angles.z = attitude_dot(2);
+
+
+        Dynamics_pos_Pub.publish(pos);
+        Dynamics_vel_Pub.publish(vel);
+        Dynamics_attitude_Pub.publish(attitude_angles);
+        Dynamics_attitude_dot_Pub.publish(attitude_dot_angles);
+
+        
         ros::spinOnce();
         loop_rate.sleep();
 
