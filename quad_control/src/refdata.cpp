@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 
         }
 
-        if(t>=5 && t<=65){
+        if(t>=5){
             x_punt_des=0.5*sin(0.1*(t-5));
 
             y_punt_des=0.5*cos(0.1*(t-5));
@@ -64,10 +64,6 @@ int main(int argc, char **argv)
             psi_punt_des=0.1;
         }
 
-        if (t>65)
-        {
-            t=0;
-        }
         
 
     x= x + x_punt_des * 0.01;
