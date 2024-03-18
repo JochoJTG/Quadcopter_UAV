@@ -64,7 +64,7 @@ def main():
     kdy=1
     kpz=1
     kdz=1
-    m=100
+    m=2
     angs=Vector3()
 
 
