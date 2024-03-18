@@ -50,14 +50,14 @@ def main():
     rospy.init_node('PositionControl', anonymous=True)
     
     # Declaración de los publishers
-    rospy.Subscriber("refdata/pos",Vector3, callbackpos)
-    rospy.Subscriber("refdata/ang",Vector3, callbackang)
-    rospy.Subscriber("refdata/vel",Vector3, callbackvel)
+    rospy.Subscriber("dynamics/pos",Vector3, callbackpos)
+    rospy.Subscriber("dynamics/attitude",Vector3, callbackang)
+    rospy.Subscriber("dynamics/lin_vel",Vector3, callbackvel)
     rospy.Subscriber("refdata/posdes",Vector3, callbackposdes)
     rospy.Subscriber("refdata/veldes",Vector3, callbackveldes)
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
 
-
+ #jorge se la come
 
     rate = rospy.Rate(100)  
     kpx=1
@@ -109,20 +109,7 @@ def main():
         #rolldes=rollerror
         #pitchdes=pitcherror
 
-        
-
-
-
-
-
-
-
-
-
-        
         rate.sleep()
-
-
 
 
 
