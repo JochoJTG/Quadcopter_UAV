@@ -15,7 +15,7 @@ float z=0;
 
 float phi=0;
 float theta=0;
-float psi= M_PI/2; //Girro viendo hacia enfrete
+float psi= M_PI/2; //Girro viendo hacia enfrente
 
 float phi_punto_des;
 float theta_punto_des;
