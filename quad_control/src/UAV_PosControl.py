@@ -62,17 +62,21 @@ def main():
 
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
     Th = rospy.Publisher('posdata/thrust',Vector3, queue_size = 10)
+    posErrors = rospy.Publisher('posdata/pos_error', Vector3, queue_size = 10)
+    velErrors = rospy.Publisher('posdata/vel_error', Vector3, queue_size = 10)
 
     rate = rospy.Rate(100)  
     kpx= 0
-    kdx= 0.6
+    kdx=0.8
     kpy= 0
-    kdy= 0.6
-    kpz=1
-    kdz= 1
+    kdy= 0.8
+    kpz=3.8
+    kdz= 1.8
     m=2
     angs=Vector3()
     Thr = Vector3()
+    pos_error = Vector3()
+    vel_error = Vector3()
 
     while not rospy.is_shutdown():
 
@@ -89,17 +93,29 @@ def main():
 
         thrust=(m/(math.cos(pitch)*math.cos(roll)))*(-9.81+uvz)
         phides=math.asin((m/thrust)*(math.sin(yaw)*uvx-math.cos(yaw)*uvy))
-        print(xvel,xveldes)
+        print(uvz, z, zdes, zvel, zveldes)
         thetades=math.asin(((m/thrust)*uvx-math.sin(yaw)*math.sin(phides))/(math.cos(yaw)*math.cos(phides)))
         
-        angs.x= thetades
-        angs.y= phides
+        angs.x= phides
+        angs.y= thetades
 
         Thr.x=thrust
 
-        
+        pos_error.x = ex
+        pos_error.y = ey
+        pos_error.z = ez
+
+        vel_error.x = exvel
+        vel_error.y = eyvel
+        vel_error.z = ezvel  
+
         angdes.publish(angs)
         Th.publish(Thr)
+        posErrors.publish(pos_error)
+        velErrors.publish(vel_error)
+
+
+        
   
 
 
@@ -124,7 +140,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        x=0
+        x=-5
         y=0
         z=0
         pitch=0
@@ -135,11 +151,12 @@ if __name__ == '__main__':
         zvel=0
         xdes=0
         ydes=0
-        zdes=100
+        zdes=0
         xveldes=0
         yveldes=0
         zveldes=0
         psi_des = 0
+        thrust = 19.32
         main()
     except rospy.ROSInterruptException:
         pass
