@@ -43,9 +43,6 @@ def callbackveldes(data):
     yveldes=data.y
     zveldes=data.z
  
-def callbackangdes(data):
-    global psi_des
-    psi_des = data.z
 
 def main():
 
@@ -58,7 +55,6 @@ def main():
     rospy.Subscriber("dynamics/lin_vel",Vector3, callbackvel)
     rospy.Subscriber("refdata/pos",Vector3, callbackposdes)
     rospy.Subscriber("refdata/vel",Vector3, callbackveldes)
-    rospy.Subscriber("refdata/ang", Vector3, callbackangdes)
 
     angdes = rospy.Publisher('posdata/angdes',Vector3, queue_size=10)
     Th = rospy.Publisher('posdata/thrust',Vector3, queue_size = 10)
