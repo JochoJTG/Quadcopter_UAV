@@ -13,9 +13,9 @@ const float Jxx = 0.0411;
 const float Jyy = 0.0478;
 const float Jzz = 0.0599;
 
-const float Kp_phi = 0.5;
+const float Kp_phi = 0.6;
 const float Kd_phi = 1;
-const float Kp_theta = 0.5;
+const float Kp_theta = 0.6;
 const float Kd_theta = 1;
 const float Kp_psi = 0.5;
 const float Kd_psi = 1;
@@ -64,12 +64,17 @@ int main(int argc, char **argv) {
 
     // Publicador para los torques usando Vector3
     ros::Publisher torque_pub = nh.advertise<geometry_msgs::Vector3>("/torques", 10);
+    ros::Publisher error_pub = nh.advertise<geometry_msgs::Vector3>("/att_errors", 10);
+    ros::Publisher error_dot_pub = nh.advertise<geometry_msgs::Vector3>("/att_dot_errors", 10);
 
     ros::Rate loop_rate(100); // Frecuencia de 10 Hz
 
     while (ros::ok()) {
 
         geometry_msgs::Vector3 torques;
+        geometry_msgs::Vector3 att_error;
+        geometry_msgs::Vector3 att_dot_error;
+
         
         // Cálculos para los errores
         error_phi = phi_d - phi;
@@ -89,8 +94,20 @@ int main(int argc, char **argv) {
         torques.y = Jyy * u_theta;
         torques.z = Jzz * u_psi;
 
-        // Publicación de los torques
+        //Asignacion de los errores a mensajes Vector3
+
+        att_error.x = error_phi;
+        att_error.y = error_theta;
+        att_error.z = error_psi;
+
+        att_dot_error.x = error_phi_punto;
+        att_dot_error.y = error_theta_punto;
+        att_dot_error.z = error_psi_punto;
+
+        // Publicación de los torques y errores
         torque_pub.publish(torques); 
+        error_pub.publish(att_error);
+        error_dot_pub.publish(att_dot_error);
         
         ros::spinOnce();
         loop_rate.sleep();
