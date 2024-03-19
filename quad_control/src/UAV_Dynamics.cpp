@@ -6,8 +6,8 @@
 
 int g = 9.81;
 int uav_weight = 2; //KG
-float thrust, tx, ty, tz;
-
+float  tx, ty, tz;
+float thrust = -19.32; 
 float phi,theta,psi;
 
 float step = 1.0/100.0;
@@ -23,12 +23,14 @@ Eigen::Vector3f attitude;
 Eigen::Vector3f linear_accel_body; //body frame
 Eigen::Vector3f linear_vel_body; //body frame
 Eigen::Vector3f e3;
-Eigen::Vector3f linear_pos;
+Eigen::Vector3f linear_pos(-5,0,0);
 Eigen::Vector3f linear_vel_inertial;
 Eigen::Matrix3f rotationalmatrix;
 Eigen::Matrix3f rot2;
 Eigen::Vector3f force;
+Eigen::Matrix3f wx;
 
+Eigen::Matrix3f Skew(Eigen::Vector3f w);
 Eigen::Matrix3f R(float phi, float theta, float psi);
 Eigen::Matrix3f R2(float phi, float theta, float psi);
 
@@ -79,8 +81,8 @@ int main(int argc, char **argv){
     pos.z = linear_pos(2);
 
     vel.x = linear_vel_inertial(0);
-    vel.x = linear_vel_inertial(1);
-    vel.x = linear_vel_inertial(2);
+    vel.y = linear_vel_inertial(1);
+    vel.z = linear_vel_inertial(2);
 
     attitude_angles.x = attitude(0);
     attitude_angles.y = attitude(1);
@@ -96,10 +98,12 @@ int main(int argc, char **argv){
     Dynamics_attitude_Pub.publish(attitude_angles);
     Dynamics_attitude_dot_Pub.publish(attitude_dot_angles);
 
+
+
     while (ros::ok())
     {
          
-    angular_accel_body = inertias_matrix.inverse() * (torques - angular_vel_body.cross(inertias_matrix * angular_vel_body));
+    angular_accel_body = inertias_matrix.inverse() * (torques - Skew(angular_vel_body) * inertias_matrix * angular_vel_body);
     //angular_accel_body = inertias_matrix.inverse() * (torques - attitude_dot.cross(inertias_matrix * attitude_dot));
     
 
@@ -119,7 +123,7 @@ int main(int argc, char **argv){
     
     force = thrust * e3 + R(attitude(0), attitude(1), attitude(2)).transpose() * uav_weight * g * e3;
 
-    linear_accel_body = force/uav_weight - angular_vel_body.cross(linear_vel_body);
+    linear_accel_body = force/uav_weight - Skew(angular_vel_body)*(linear_vel_body);
     
     for (int i = 0; i < 3; i++)
     {
@@ -179,4 +183,14 @@ Eigen::Matrix3f R2(float phi, float theta, float psi){
             0, sin(phi)/cos(theta), cos(phi)/cos(theta);
 
     return rot2;
+}
+
+Eigen::Matrix3f Skew(Eigen::Vector3f w){
+
+    Eigen::Matrix3f wx;
+        wx << 0, -w(2), w(1),
+            w(2), 0, -w(0),
+            -w(1), w(0), 0;
+
+    return wx;
 }
