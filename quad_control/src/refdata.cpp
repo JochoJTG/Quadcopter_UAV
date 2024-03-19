@@ -15,7 +15,7 @@ float z=0;
 
 float phi=0;
 float theta=0;
-float psi=0;
+float psi= M_PI/2; //Girro viendo hacia enfrete
 
 float phi_punto_des;
 float theta_punto_des;
@@ -56,12 +56,12 @@ int main(int argc, char **argv)
 
         }
 
-        if(t>=5){
+        if(t>=5){ //Circulo infinito
             x_punt_des=0.5*sin(0.1*(t-5));
 
             y_punt_des=0.5*cos(0.1*(t-5));
             z_punt_des=0;
-            psi_punt_des=0.1;
+            psi_punt_des=-0.1;
         }
 
         
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
     ref_omega.x = phi_punto_des;
     ref_omega.y = theta_punto_des;
-    ref_omega.z = z_punt_des;
+    ref_omega.z = psi_punt_des;
 
     ros::spinOnce();
 
